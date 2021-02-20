@@ -23,7 +23,6 @@ def thing():
   spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
   f0, _, _ = librosa.pyin(data, sr=sr, fmin=65, fmax=2093)
 
-  #sf.write('tmp.wav', data, samplerate) # convert to wav
   recognizer = Recognizer()
   audiofile = AudioFile(wav_filename)
   with audiofile as source:
