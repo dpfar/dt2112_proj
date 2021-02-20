@@ -1,0 +1,103 @@
+<html>
+<head>
+  <title>WOW! This sure is a WEBSITE!!!</title>
+  <!-- Make the thing Dark -->
+  <style>
+    body {
+      color: white;
+      background-color: #222222;
+    }
+  </style>
+  <!-- jQuery -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <!-- Code taken from https://jsfiddle.net/xuyy3han/ -->
+  <script>
+  navigator.mediaDevices.getUserMedia({
+  audio: true
+  })
+  .then(stream => {
+    rec = new MediaRecorder(stream);
+    rec.ondataavailable = e => {
+      audio.push(e.data);
+      if (rec.state == "inactive") {
+        let blob = new Blob(audio, {
+          type: 'audio/x-mpeg-3'
+        });
+        recordedAudio.src = URL.createObjectURL(blob);
+        recordedAudio.controls = true;
+        audioDownload.href = recordedAudio.src;
+        audioDownload.download = 'audio.mp3';
+        audioDownload.innerHTML = 'Download';
+        submit(blob);
+      }
+    }
+  })
+  .catch(e => console.log(e));
+
+  function startRecording() {
+    startRecord.disabled = true;
+    stopRecord.disabled = false;
+    audio = [];
+    recordedAudio.controls = false;
+    rec.start();
+  }
+
+  function stopRecording() {
+    startRecord.disabled = false;
+    stopRecord.disabled = true;
+    rec.stop();
+  }
+
+  function submit(blob) {
+    var reader = new window.FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function() {
+      var fd = new FormData();
+      var file = new File([blob], "audio.ogg");
+      fd.append('file', file);
+      $.ajax({
+        type: 'POST',
+        url: '/thing',
+        data: fd,
+        cache: false,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data'
+      }).done(function(data) {
+        console.log(data);
+        asr_result.innerHTML = data.asr_result;
+        full_response.innerHTML = JSON.stringify(data);
+      });
+    }
+  }
+  </script>
+</head>
+<body>
+<h1>This is project thing</h1>
+
+<h1>Listen to sound here!</h1>
+<audio controls>
+  <source src="test.wav" type="audio/wav"/>
+  listen
+</audio>
+
+
+<h1>Record stuff!</h1>
+<div id="audio">
+    <button id=startRecord onclick="startRecording()">Start</button>
+    <button id=stopRecord onclick="stopRecording()">Stop</button>
+  </div>
+
+<div id="result">
+  <h1>This is what you sound like</h2>
+  <audio id=recordedAudio></audio>
+  </br>
+  <a id=audioDownload></a>
+
+  <h3 id="asr_result" style="color: green;"></p>
+
+  <h3 id="full_response" style="color: grey;"></p>
+
+</div>
+</body>
+</html>
