@@ -66,6 +66,7 @@
       }).done(function(data) {
         console.log(data);
         asr_result.innerHTML = data.asr_result;
+        f0_result.innerHTML = "Fundamental frequency (F0): " + data.f0;
         full_response.innerHTML = JSON.stringify(data);
       });
     }
@@ -95,6 +96,9 @@
   <a id=audioDownload></a>
 
   <h3 id="asr_result" style="color: green;"></p>
+
+  <h3 id="f0_result" style="color: orange;"></p>
+
 
   <h3 id="full_response" style="color: grey;"></p>
 

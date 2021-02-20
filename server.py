@@ -1,5 +1,5 @@
 from flask import Flask, redirect, request, jsonify
-import speech_recognition as sr
+from speech_recognition import Recognizer, AudioFile
 import soundfile as sf
 import librosa
 import numpy as np
@@ -18,16 +18,18 @@ def thing():
   f.save(f.filename) # Saves the file
   wav_filename = 'tmp.wav'
   # Convert to wav (file is in ogg format, so thing don't work with sf or sr)
-  system('ffmpeg -i {} {}'.format(f.filename, wav_filename))
-  data, samplerate = sf.read(f)
+  system('ffmpeg -y -i {} -ac 1 {}'.format(f.filename, wav_filename))
+  data, sr = librosa.load(wav_filename)
+  spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
+  f0, _, _ = librosa.pyin(data, sr=sr, fmin=65, fmax=2093)
 
   #sf.write('tmp.wav', data, samplerate) # convert to wav
-  recognizer = sr.Recognizer()
-  audiofile = sr.AudioFile(wav_filename)
+  recognizer = Recognizer()
+  audiofile = AudioFile(wav_filename)
   with audiofile as source:
     data = recognizer.record(source)
   transcript = recognizer.recognize_google(data, key=None)
-  return jsonify({'asr_result': transcript})
+  return jsonify({'asr_result': transcript, "f0": np.nanmean(f0)})
 
 if __name__ == '__main__':
   app.run()
