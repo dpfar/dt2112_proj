@@ -24,11 +24,11 @@ def thing():
   f0, _, _ = librosa.pyin(data, sr=sr, fmin=65, fmax=2093)
 
   recognizer = Recognizer()
-  audiofile = AudioFile(wav_filename)
-  with audiofile as source:
-    data = recognizer.record(source)
-  transcript = recognizer.recognize_google(data, key=None)
-  return jsonify({'asr_result': transcript, "f0": np.nanmean(f0)})
+  #audiofile = AudioFile(wav_filename)
+  #with audiofile as source:
+    #data = recognizer.record(source)
+  #transcript = recognizer.recognize_google(data, key=None)
+  return jsonify({'asr_result': 'asdfbasldfjaskldfjlasdf', "f0": np.nanmean(f0)})
 
 if __name__ == '__main__':
   app.run()
