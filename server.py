@@ -1,5 +1,4 @@
 from flask import Flask, redirect, request, jsonify
-from speech_recognition import Recognizer, AudioFile
 import soundfile as sf
 import librosa
 import numpy as np
