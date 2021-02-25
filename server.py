@@ -20,9 +20,11 @@ def thing():
   system('ffmpeg -y -i {} -ac 1 {}'.format(f.filename, wav_filename))
   data, sr = librosa.load(wav_filename)
   spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
-  f0, _, _ = librosa.pyin(data, sr=sr, fmin=65, fmax=2093)
+  f0, _, prob = librosa.pyin(data, sr=sr, fmin=65, fmax=2093)
 
-  return jsonify({'asr_result': 'asdfbasldfjaskldfjlasdf', "f0": np.nanmean(f0)})
+  return jsonify({'voiced_prob': np.nanmean(prob),
+                  "f0": np.nanmean(f0),
+                  "stddev": np.nanstd(f0)})
 
 if __name__ == '__main__':
   app.run()
