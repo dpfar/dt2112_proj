@@ -24,7 +24,7 @@ def thing():
   spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
   f0, _, prob = librosa.pyin(data, sr=sr, fmin=65, fmax=2093, frame_length=512)
 
-  return jsonify({'voiced_prob': np.nanmean(prob),
+  return jsonify({'voiced_prob': np.nanmean(np.where(np.isnan(f0), f0, prob)),
                   "f0": np.nanmean(f0),
                   "stddev": np.nanstd(f0),
                   'syllable_estimate': count_syllables(f0)})
