@@ -10,7 +10,7 @@ Dependencies:
 How to run:
 ```
 $ export FLASK_ENV=development
-$ export FLASK_APP=hello.py
+$ export FLASK_APP=server.py
 $ flask run
 ```
 The website should be accessible on `http://localhost:5000`.
