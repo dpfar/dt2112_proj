@@ -65,16 +65,14 @@
         enctype: 'multipart/form-data'
       }).done(function(data) {
         console.log(data);
-        asr_result.innerHTML = data.asr_result;
-        f0_result.innerHTML = "Fundamental frequency (F0): " + data.f0;
-        full_response.innerHTML = JSON.stringify(data);
+        full_response.innerHTML = JSON.stringify(data, null, 2);
       });
     }
   }
   </script>
 </head>
 <body>
-<h1>This is project thing</h1>
+<h1>Project Prototype</h1>
 
 <h1>Listen to sound here!</h1>
 <audio controls>
@@ -83,24 +81,30 @@
 </audio>
 
 
-<h1>Record stuff!</h1>
+<h1>Upload file here</h1>
+<form method="POST" action="/thing" enctype="multipart/form-data">
+  <input name="file" type="file" />
+  <input type="submit" />
+</form>
+
+
+
+<h1>Or record something here!</h1>
 <div id="audio">
     <button id=startRecord onclick="startRecording()">Start</button>
     <button id=stopRecord onclick="stopRecording()">Stop</button>
   </div>
 
 <div id="result">
-  <h1>This is what you sound like</h2>
+  <h1>Result</h2>
   <audio id=recordedAudio></audio>
   </br>
   <a id=audioDownload></a>
 
-  <h3 id="asr_result" style="color: green;"></p>
 
-  <h3 id="f0_result" style="color: orange;"></p>
+  <pre id="full_response"></pre>
 
-
-  <h3 id="full_response" style="color: grey;"></p>
+  </p>
 
 </div>
 </body>

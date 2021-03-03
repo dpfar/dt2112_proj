@@ -27,7 +27,8 @@ def thing():
   return jsonify({'voiced_prob': np.nanmean(np.where(np.isnan(f0), f0, prob)),
                   "f0": np.nanmean(f0),
                   "stddev": np.nanstd(f0),
-                  'syllable_estimate': count_syllables(f0)})
+                  'syllable_estimate': count_syllables(f0),
+                  'voiced_percent': float(np.count_nonzero(np.where(np.isnan(f0), 0, 1)))/f0.size})
 
 
 def count_syllables(f0):
