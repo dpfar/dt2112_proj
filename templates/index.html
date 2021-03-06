@@ -75,9 +75,11 @@
 <body>
 <h1>Project Prototype</h1>
 
-<h1>Listen to sound here! Thing = {{index}} {{url_for('static', filename=index+'.wav')}}</h1>
+<h1>Listen to sound here! Index = {{index}} </h1>
+<h2> This is the text you should read: </h2></br> 
+<h2 style='color:yellow'>{{ text }}</h2>
 <audio controls>
-  <source src="{{url_for('static', filename=index+'.wav')}}" type="audio/wav"/>
+  <source src="{{url_for('static', filename=(index|string)+'.wav')}}" type="audio/wav"/>
   listen
 </audio>
 

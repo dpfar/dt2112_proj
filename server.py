@@ -8,14 +8,30 @@ import math
 
 app = Flask(__name__, static_url_path='/', static_folder='static')
 
+texts = ['Alla tiger och undviker varandra med blicken',
+        'De kanske annars skulle ha flugit söderut mot värmen',
+        'Fotboll intresserade honom ju egentligen inte',
+        'Ingen av de tillfrågade ville syssla med gruvdrift',
+        'Vid juletid skickas mössor till kungafamiljen',
+        'Avhoppet från överklassen innebar ett vägval',
+        'Bara ett syskon kunde tänkas ha samma blodgrupp',
+        'Den ljushårige  publikfavoriten skulle bort',
+        'Han skulle gifta sig med en ängel utan vingar',
+        'Han rullade sina axlar för att mjuka upp lederna']
+
 @app.route('/')
+@app.route('/app/'+str(len(texts)+1))# Loop if all are done
 def redir(index=0):
   return redirect('/app/0', code=302)
+
+def redir(index=0):
+  return redirect('/app/0', code=302)
+
 
 @app.route('/app/<index>')
 def display_page(index=0):
   
-  return render_template('index.html', index=index)
+  return render_template('index.html', index=int(index), text=texts[int(index)])
   
 
 @app.route('/thing', methods=['POST'])
