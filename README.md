@@ -5,7 +5,12 @@ Dependencies:
 * librosa
 * soundfile
 * SpeechRecognition
+* [speechmetrics](https://github.com/aliutkus/speechmetrics)
 * ...probably a few more
+
+The `get_stats.py` script also requires:
+* pandas
+* tqdm
 
 How to run:
 ```
