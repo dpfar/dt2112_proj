@@ -45,24 +45,13 @@ def thing():
   # Convert to wav (file is in ogg format, so thing don't work with sf or sr)
   system('ffmpeg -y -i {} -ac 1 {}'.format(f.filename, wav_filename))
   return jsonify(get_metrics(wav_filename))
-  """
-  data, sr = librosa.load(wav_filename)
-  spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
-  f0, _, prob = librosa.pyin(data, sr=sr, fmin=65, fmax=2093, frame_length=512)
-
-  return jsonify({'voiced_prob': np.nanmean(np.where(np.isnan(f0), f0, prob)),
-                  "f0": np.nanmean(f0),
-                  "stddev": np.nanstd(f0),
-                  'syllable_estimate': count_syllables(f0),
-                  'voiced_percent': float(np.count_nonzero(np.where(np.isnan(f0), 0, 1)))/f0.size})
-  """
-
 
 def get_metrics(wav_filename='tmp.wav'):
   speech_mets = speech_metrics(wav_filename)
   data, sr = librosa.load(wav_filename, sr=16000)
   spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
   f0, _, prob = librosa.pyin(data, sr=sr, fmin=65, fmax=2093, frame_length=512)
+  f0 = librosa.hz_to_midi(f0)
   return {'voiced_prob': np.nanmean(np.where(np.isnan(f0), f0, prob)),
                   "f0": np.nanmean(f0),
                   "stddev": np.nanstd(f0),
@@ -85,6 +74,7 @@ def count_syllables(f0):
       br = True
 
   return n
+
 
 if __name__ == '__main__':
   app.run()
