@@ -63,17 +63,30 @@ def get_metrics(wav_filename='tmp.wav'):
 
 
 def count_syllables(f0):
+  print('size')
+  print(f0.size)
+  frame_length = 512.0/16000.0 #Frame length in seconds
+  #Maximum pause length in frames (pause length in seconds is 0.3)
+  pause_length = int(0.8 / frame_length)
+  max_consecutive_syl = 0
   n = 0
+  breaks = 0
   br  = False
   for i in f0:
     if math.isnan(i):
       if br:
         n += 1
       br = False
+      breaks += 1
+      if breaks >= pause_length:
+        max_consecutive_syl = max(max_consecutive_syl, n)
+        n = 0
     else:
       br = True
+      breaks = 0
 
-  return n
+  max_consecutive_syl = max(max_consecutive_syl, n)
+  return max_consecutive_syl
 
 
 if __name__ == '__main__':
