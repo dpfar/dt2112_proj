@@ -66,6 +66,7 @@
       }).done(function(data) {
         console.log(data);
         full_response.innerHTML = JSON.stringify(data, null, 2);
+        nextlink.style.visibility = "visible";
       });
     }
   }
@@ -74,9 +75,9 @@
 <body>
 <h1>Project Prototype</h1>
 
-<h1>Listen to sound here!</h1>
+<h1>Listen to sound here! Thing = {{index}} {{url_for('static', filename=index+'.wav')}}</h1>
 <audio controls>
-  <source src="test.wav" type="audio/wav"/>
+  <source src="{{url_for('static', filename=index+'.wav')}}" type="audio/wav"/>
   listen
 </audio>
 
@@ -105,7 +106,8 @@
   <pre id="full_response"></pre>
 
   </p>
-
 </div>
+
+<h1><a id="nextlink" style="visibility:hidden;color:red"  href="{{ url_for('.display_page', index=(index|int)+(1|int))}}"> click here to go to the next thingy </a></h1>
 </body>
 </html>
