@@ -3,6 +3,7 @@ import soundfile as sf
 import librosa
 import numpy as np
 from os import system
+import speechmetrics
 
 import math
 
@@ -18,6 +19,8 @@ texts = ['Alla tiger och undviker varandra med blicken',
         'Den ljushårige  publikfavoriten skulle bort',
         'Han skulle gifta sig med en ängel utan vingar',
         'Han rullade sina axlar för att mjuka upp lederna']
+
+speech_metrics = speechmetrics.load('absolute', window=None)
 
 @app.route('/')
 @app.route('/app/'+str(len(texts)+1))# Loop if all are done
@@ -56,14 +59,17 @@ def thing():
 
 
 def get_metrics(wav_filename='tmp.wav'):
-  data, sr = librosa.load(wav_filename)
+  speech_mets = speech_metrics(wav_filename)
+  data, sr = librosa.load(wav_filename, sr=16000)
   spectrogram = librosa.feature.melspectrogram(y=data, sr=sr)
   f0, _, prob = librosa.pyin(data, sr=sr, fmin=65, fmax=2093, frame_length=512)
   return {'voiced_prob': np.nanmean(np.where(np.isnan(f0), f0, prob)),
                   "f0": np.nanmean(f0),
                   "stddev": np.nanstd(f0),
                   'syllable_estimate': count_syllables(f0),
-                  'voiced_percent': float(np.count_nonzero(np.where(np.isnan(f0), 0, 1)))/f0.size}
+                  'voiced_percent': float(np.count_nonzero(np.where(np.isnan(f0), 0, 1)))/f0.size,
+                  'srmr': speech_mets['srmr'],
+                  'mosnet': float(speech_mets['mosnet'][0][0])}
 
 
 
